@@ -1,0 +1,1464 @@
+<!-- modal de novo lançamento --> 
+    <div class="modal-overlay" id="ofxReconcileModal" style="z-index: 3200;">
+		<div class="modal-card" style="max-width: 450px; padding: 0;">
+			<div class="modal-header" style="padding: 20px 24px 12px 24px;">
+				<h2 style="font-size: 1.3rem;">Conciliar Lançamento</h2>
+				<button class="close-btn" id="closeOfxReconcileBtn">&times;</button>
+			</div>
+			<div class="modal-body" style="padding: 0 24px 24px 24px;">
+				<p class="modal-desc">Selecione o lançamento pendente correto ou escolha importar como um novo registro.</p>
+				<div id="ofxReconcileList" style="display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; padding-right: 4px;">
+					</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="briefingModal" style="z-index: 6000;">
+        <div class="modal-card" style="max-width: 460px; padding: 0; overflow: hidden; display: flex; flex-direction: column; border-radius: 20px;">
+            <div style="padding: 22px 24px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 0.5px solid #f1f3f4; flex-shrink: 0;">
+                <div class="flex-row-gap12">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: #E1F5EE; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <span class="material-icons" style="font-size: 1.25rem; color: #0F6E56;">notifications_active</span>
+                    </div>
+                    <div>
+                        <p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9aa0a6;">Resumo do dia</p>
+                        <h2 style="margin: 2px 0 0; font-size: 16px; font-weight: 500; color: #1a1b1e;">Olá, <span id="briefingName"></span>!</h2>
+                    </div>
+                </div>
+                <button class="close-btn" id="closeBriefingBtn">&times;</button>
+            </div>
+            <div id="briefingContent" style="padding: 0; max-height: 58vh; overflow-y: auto;"></div>
+            <div style="padding: 14px 24px 20px; border-top: 0.5px solid #f1f3f4; flex-shrink: 0;">
+                <button class="btn btn-primary" id="btnAcknowledgeBriefing" style="width: 100%; justify-content: center; padding: 11px 20px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                    <span class="material-icons" style="font-size: 1rem;">dashboard</span>
+                    Ir para o Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+
+            <div class="modal-header" style="padding: 18px 24px 0; border-bottom: 0.5px solid #f1f3f4; padding-bottom: 14px; flex-shrink: 0;">
+                <div>
+                    <p style="font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #9aa0a6; margin: 0 0 3px;">Lançamento</p>
+                    <h2 id="modalTitle" style="font-size: 17px; font-weight: 500; margin: 0;">Novo lançamento</h2>
+                </div>
+                <div class="flex-row-gap4">
+                    <div id="topActionsRight" style="display: none; align-items: center; gap: 4px;">
+                        <button type="button" id="editToggleBtn" class="icon-btn-header" title="Editar"><span class="material-icons-outlined" style="font-size: 20px;">edit</span></button>
+                        <button type="button" id="duplicateToggleBtn" class="icon-btn-header" title="Duplicar"><span class="material-icons-outlined" style="font-size: 20px;">content_copy</span></button>
+                    </div>
+                    <button class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+
+                <div id="stepIndicator" class="step-indicator">
+                    <div class="step active" data-step="1">1</div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="2">2</div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="3">3</div>
+                </div>
+
+                <div id="step1_content" class="step-content active">
+
+                    <p style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9aa0a6; margin: 0 0 8px;">Informações básicas</p>
+
+                    <div class="form-row gap-1rem">
+                        <div class="form-group" style="flex: 2;">
+                            <label for="descricao">Descrição *</label>
+                            <input type="text" id="descricao" placeholder="Ex: Salário, Aluguel, Mercado..." required>
+                        </div>
+                        <div class="form-group" id="contaLancamentoGroup" style="display: none;">
+                            <label for="contaLancamento">Conta</label>
+                            <select id="contaLancamento"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-row gap-1rem">
+                        <div class="form-group" style="flex: 0 0 180px;">
+                            <label for="valor">Valor (R$) *</label>
+                            <input type="text" id="valor" class="valor-input" placeholder="R$ 0,00" required>
+                        </div>
+                        <div class="form-group" class="flex-1">
+                            <label for="data">Data *</label>
+                            <input type="date" id="data" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row gap-1rem">
+                        <div class="form-group" class="flex-1">
+                            <label for="categoria">Categoria *</label>
+                            <select id="categoria" required></select>
+                        </div>
+                        <div class="form-group" class="flex-1">
+                            <label for="parceiro">Parceiro</label>
+                            <select id="parceiro">
+                                <option value="">Nenhum</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row gap-1rem">
+                        <div class="form-group" class="flex-1">
+                            <label for="contaOrigem">Conta Origem</label>
+                            <select id="contaOrigem"><option value="">Selecione</option></select>
+                        </div>
+                        <div class="form-group" class="flex-1">
+                            <label for="contaDestino">Conta Destino</label>
+                            <select id="contaDestino"><option value="">Selecione</option></select>
+                        </div>
+                    </div>
+
+                    <div class="form-row gap-1rem">
+                        <div class="form-group" style="flex: 3;">
+                            <label for="tipo">Tipo *</label>
+                            <div class="type-selector" id="tipoSelector">
+                                <div class="type-option expense selected" data-value="expense">
+                                    <span class="material-icons" style="font-size: 1.3rem;">remove_circle</span>
+                                    <span>Despesa</span>
+                                </div>
+                                <div class="type-option income" data-value="income">
+                                    <span class="material-icons" style="font-size: 1.3rem;">add_circle</span>
+                                    <span>Receita</span>
+                                </div>
+                                <div class="type-option transfer" data-value="transfer">
+                                    <span class="material-icons" style="font-size: 1.3rem;">swap_horiz</span>
+                                    <span>Transferência</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" class="flex-1">
+                            <label for="pagamento">Forma de Pagamento</label>
+                            <select id="pagamento">
+                                <option value="">Nenhum</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row gap-1rem" id="parcelasCardGroup" style="display:none; gap:1rem;">
+                        <div class="form-group" id="parcelasGroup" style="flex:1; display:none;">
+                            <label for="parcelas">Total de Parcelas</label>
+                            <input type="number" id="parcelas" min="1" max="120" placeholder="Ex: 3">
+                        </div>
+                        <div class="form-group" id="cartaoGroup" style="flex:2; display:none;">
+                            <label for="cartao">Cartão de Crédito</label>
+                            <select id="cartao"><option value="">Selecione...</option></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="boletoFieldGroup" style="display:none; background:#f8fafc; padding:12px; border-radius:12px; border:0.5px solid #e2e8f0;">
+                        <label>Linha Digitável / Código de Barras</label>
+                        <div style="display:flex; gap:8px; margin-top: 8px;">
+                            <input type="text" id="boletoInput" placeholder="Cole a linha digitável aqui..." style="flex:1;">
+                            <button type="button" id="openScannerModalBtn" style="background:#E1F5EE; color:#0F6E56; border:none; border-radius:10px; width:40px; height:40px; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                <span class="material-icons" style="font-size: 1.2rem;">photo_camera</span>
+                            </button>
+                        </div>
+                        <small id="scanStatus" style="display:none; color:#1D9E75; font-size:0.8rem; margin-top:6px; font-weight:500;"></small>
+                    </div>
+
+                </div>
+
+                <div id="step2_content" class="step-content">
+                    <div class="receipt-form">
+                        <div class="form-row" style="flex-wrap: wrap; gap: 1rem;">
+                            <div id="receiptContaRow" class="form-group" class="flex-1">
+                                <label for="receiptConta">Conta</label>
+                                <select id="receiptConta"><option value="">Selecione...</option></select>
+                            </div>
+                            <div id="receiptParceiroRow" class="form-group" class="flex-1">
+                                <label for="receiptParceiro">Parceiro</label>
+                                <select id="receiptParceiro"><option value="">Selecione...</option></select>
+                            </div>
+                            <div class="form-group" class="flex-1">
+                                <label for="receiptVencimento">Vencimento</label>
+                                <input type="date" id="receiptVencimento">
+                            </div>
+                        </div>
+                        <div class="form-row" style="flex-wrap: wrap; gap: 1rem;">
+                            <div class="form-group" class="flex-1" id="receiptOrigemRow">
+                                <label for="receiptOrigem">Origem</label>
+                                <select id="receiptOrigem"><option value="">Selecione...</option></select>
+                            </div>
+                            <div class="form-group" class="flex-1" id="receiptDestinoRow">
+                                <label for="receiptDestino">Destino</label>
+                                <select id="receiptDestino"><option value="">Selecione...</option></select>
+                            </div>
+                        </div>
+                        <div class="form-row" style="flex-wrap: wrap; gap: 1rem;">
+                            <div class="form-group" class="flex-1" id="receiptParcelasRow">
+                                <label for="receiptParcelas">Parcelas</label>
+                                <input type="number" id="receiptParcelas" min="1" value="1">
+                            </div>
+                            <div class="form-group" class="flex-1" id="receiptCartaoRow">
+                                <label for="receiptCartao">Cartão</label>
+                                <select id="receiptCartao"><option value="">Selecione...</option></select>
+                            </div>
+                            <div class="form-group" class="flex-1" id="receiptRecorrenciaRow">
+                                <label for="receiptRecorrencia">Recorrência</label>
+                                <select id="receiptRecorrencia">
+                                    <option value="nenhuma">Nenhuma</option>
+                                    <option value="semanal">Semanal</option>
+                                    <option value="mensal">Mensal</option>
+                                    <option value="anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="recGroup" style="display: none;">
+                            <div class="form-row" style="flex-wrap: wrap; gap: 1rem; margin-top: 8px;">
+                                <div class="form-group" class="flex-1">
+                                    <label for="recFrequencia">Frequência</label>
+                                    <select id="recFrequencia">
+                                        <option value="semanal">Semanal</option>
+                                        <option value="mensal">Mensal</option>
+                                        <option value="anual">Anual</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" class="flex-1">
+                                    <label for="recIntervalo">A cada (intervalo)</label>
+                                    <input type="number" id="recIntervalo" min="1" value="1">
+                                </div>
+                            </div>
+                            <div class="form-row" style="flex-wrap: wrap; gap: 1rem;">
+                                <div class="form-group" class="flex-1">
+                                    <label for="terminoTipo">Término</label>
+                                    <select id="terminoTipo">
+                                        <option value="data">Data específica</option>
+                                        <option value="count">Após N repetições</option>
+                                        <option value="nunca">Nunca</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" class="flex-1" id="terminoDataGroup" style="display: block;">
+                                    <label for="terminoData">Data de Término</label>
+                                    <input type="date" id="terminoData">
+                                </div>
+                                <div class="form-group" class="flex-1" id="terminoCountGroup" style="display: none;">
+                                    <label for="terminoCount">Total de repetições</label>
+                                    <input type="number" id="terminoCount" min="1" value="12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step3_content" class="step-content">
+                    <div id="receiptContainer" style="max-width: 100%;">
+                        <div id="receiptWarningEdit" style="background: #FFF8F0; border: 0.5px solid #F5C4B3; border-radius: 10px; margin: 0; padding: 12px 14px; align-items: flex-start; gap: 10px; flex-shrink: 0;"></div>
+                        <div id="receiptEditWarning" style="display: none; background: #FFF8F0; border: 0.5px solid #F5C4B3; border-radius: 10px; margin: 12px 24px 0; padding: 12px 14px; align-items: flex-start; gap: 10px; flex-shrink: 0;">
+                            <span class="material-icons" style="font-size: 1.2rem; color: #f43f5e; flex-shrink: 0;">warning_amber</span>
+                            <span style="color: #be123c; font-size: 0.8rem; font-weight: 600;">Modo de edição ativado. Após salvar, o comprovante será regerado.</span>
+                        </div>
+                        <div id="receiptContent"></div>
+                        <div class="flex-col-gap16">
+                            <div id="receiptVerParcelasContainer" style="display:none; flex-direction:column; align-items:center; margin-top:12px;">
+                                <button class="btn btn-ghost" id="btnVerParcelas" style="font-size: 0.85rem;">
+                                    <span class="material-icons" style="font-size: 1rem;">expand_more</span> Ver parcelas
+                                </button>
+                                <div id="listaParcelasExtrato" style="display:none; width:100%; margin-top:12px; background:#f8fafc; border-radius:12px; border:0.5px solid #e2e8f0; padding:4px 8px; max-height:220px; overflow-y:auto;"></div>
+                            </div>
+                            <div id="receiptQrContainer" style="display:none; flex-direction:column; align-items:center; margin-top:24px; padding-top:24px; border-top:0.5px solid #e2e8f0;">
+                                <p id="receiptQrLabel" style="font-size: 0.85rem; color: #5f6368; margin-bottom: 12px;">QR Code do Pix</p>
+                                <div id="qrcodeContainer" style="background: white; padding: 12px; border-radius: 56px; border: 1px solid #dadce0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center;"></div>
+                                <p id="receiptQrExpiry" style="font-size: 0.75rem; color: #d93025; font-weight: 600; margin-top: 10px;"></p>
+                                <button class="btn btn-ghost" id="copyQrCodeBtn" style="margin-top: 12px; font-size: 0.85rem;">
+                                    <span class="material-icons" style="font-size: 1rem;">content_copy</span> Copiar código Pix
+                                </button>
+                            </div>
+                            <div id="receiptBoletoContainer" style="display:none; flex-direction:column; align-items:center; margin-top:24px; padding-top:24px; border-top:0.5px solid #e2e8f0;">
+                                <p style="font-size: 0.85rem; color: #188038; font-weight: 600; margin-bottom: 8px;">Código de Barras (Linha Digitável)</p>
+                                <div id="boletoBarcodeContainer" style="background: white; padding: 16px; border-radius: 12px; border: 1px solid #dadce0;"></div>
+                                <button class="btn btn-ghost" id="copyBoletoBtn" style="margin-top: 12px; font-size: 0.85rem;">
+                                    <span class="material-icons" style="font-size: 1rem;">content_copy</span> Copiar linha digitável
+                                </button>
+                            </div>
+                            <div id="receiptStatusContainer" style="margin-top: 16px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" id="stepFooter">
+                <div id="prevBtnGroup">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()">Voltar</button>
+                </div>
+                <div id="nextBtnGroup">
+                    <button class="btn btn-ghost" id="cancelBtn" onclick="closeDrawer()">Cancelar</button>
+                    <button class="btn btn-primary submit-btn" id="nextBtn" onclick="nextStep()">Continuar</button>
+                </div>
+                <div class="flex-row-gap8" id="finalActionsLeft" style="display: none;">
+                    <button class="btn btn-danger" id="deleteBtn" style="display: none;"><span class="material-icons" style="font-size: 1rem;">delete</span> Excluir</button>
+                    <button class="btn btn-primary" id="editFinalBtn" style="display: none;"><span class="material-icons" style="font-size: 1rem;">edit</span> Editar</button>
+                </div>
+                <div class="flex-row-gap8" id="finalActionsRight" style="display:none; gap:8px; align-items:center;">
+                    <button class="btn" id="reversePaymentBtn" style="display:none; align-items:center; gap:6px; background:#FAEEDA; color:#854F0B; border:0.5px solid #F5C4B3; border-radius:10px; padding:10px 16px; font-size:13px; font-weight:500; cursor:pointer;">
+                        <span class="material-icons" style="font-size: 1.2rem;">undo</span> Estornar
+                    </button>
+                    <button class="btn" id="payFinalBtn" style="display:none; align-items:center; gap:6px; background:#1D9E75; color:white; border:none; border-radius:10px; padding:10px 18px; font-size:13px; font-weight:500; cursor:pointer;">
+                        <span class="material-icons" style="font-size: 1.2rem;">paid</span> Pagar / Receber
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+	
+	<!-- Modal de Parceiro -->
+	<div class="modal-overlay" id="partnerModal">
+		<div class="modal-card" style="max-width: 500px;">
+			
+			<div class="modal-header" style="padding-bottom: 0; border-bottom: none;">
+				<h2 id="partnerModalTitle">Novo parceiro</h2>
+				<button class="close-btn" id="closePartnerModal">&times;</button>
+			</div>
+			
+			<div class="modal-tabs" id="partnerTabs">
+				<button class="tab-btn active" data-target="tabGeral">Geral</button>
+				<button class="tab-btn" data-target="tabContato">Documento/Contato</button>
+				<button class="tab-btn" data-target="tabEndereco">Endereço</button>
+			</div>
+
+			<div class="modal-body" style="padding-top: 0;">
+				<form id="partnerForm">
+					
+					<div id="tabGeral" class="tab-content active">
+						<div class="form-row" style="gap: 1rem; margin-top: 0.5rem;">
+							<div class="form-group" style="flex: 2; margin: 0;">
+								<label for="partnerName">Nome *</label>
+								<input type="text" id="partnerName" placeholder="Ex: João da Silva" required>
+							</div>
+							<div class="form-group" class="flex-1 m-0">
+								<label for="partnerType">Tipo *</label>
+								<select id="partnerType" required>
+									<option value="Física">Física</option>
+									<option value="Jurídica">Jurídica</option>
+									<option value="Outros">Outros</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group" style="margin-top: 1.5rem;">
+							<label for="partnerObservation">Observação</label>
+							<textarea id="partnerObservation" rows="4" placeholder="Detalhes adicionais..."></textarea>
+						</div>
+
+						<div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+							<div style="display: flex; flex-direction: column; align-items: center; min-width: 80px;">
+								<label id="partnerActiveLabel" style="font-size: 0.9rem; font-weight: 600; margin-bottom: 4px;">Ativo</label>
+								<div class="toggle-switch">
+									<input type="checkbox" id="partnerActive" checked>
+									<label for="partnerActive" class="toggle-label"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="tabContato" class="tab-content">
+						<div style="display: flex; gap: 1.5rem; margin-top: 0.5rem;">
+							
+							<div style="flex: 2; display: flex; flex-direction: column; gap: 1rem;">
+								<div class="flex-end-gap16">
+									<div class="form-group" class="flex-1 m-0">
+										<label for="partnerDoc" id="docLabel">CPF/CNPJ</label>
+										<input type="text" id="partnerDoc" placeholder="000.000.000-00">
+									</div>
+									<div class="pix-check-cell">
+										<label for="partnerDocIsPix" class="pix-check-label">Pix?</label>
+										<input type="checkbox" id="partnerDocIsPix" class="pix-check-input">
+									</div>
+								</div>
+
+								<div class="flex-end-gap16">
+									<div class="form-group" class="flex-1 m-0">
+										<label for="partnerPhone">Celular / WhatsApp</label>
+										<input type="text" id="partnerPhone" placeholder="(00) 00000-0000" maxlength="15">
+									</div>
+									<div class="pix-check-cell">
+										<label for="partnerPhoneIsPix" class="pix-check-label">Pix?</label>
+										<input type="checkbox" id="partnerPhoneIsPix" class="pix-check-input">
+									</div>
+								</div>
+
+								<div class="flex-end-gap16">
+									<div class="form-group" class="flex-1 m-0">
+										<label for="partnerEmail">E-mail</label>
+										<input type="email" id="partnerEmail" placeholder="email@exemplo.com">
+									</div>
+									<div class="pix-check-cell">
+										<label for="partnerEmailIsPix" class="pix-check-label">Pix?</label>
+										<input type="checkbox" id="partnerEmailIsPix" class="pix-check-input">
+									</div>
+								</div>
+
+								<div class="flex-end-gap16">
+									<div class="form-group" class="flex-1 m-0">
+										<label for="partnerRandomPix">Chave Pix Aleatória</label>
+										<input type="text" id="partnerRandomPix" placeholder="Ex: 123e4567-e89b-12d3-a456-426655440000">
+									</div>
+									<div class="pix-check-cell">
+										<label for="partnerRandomPixIsPix" class="pix-check-label">Pix?</label>
+										<input type="checkbox" id="partnerRandomPixIsPix" class="pix-check-input">
+									</div>
+								</div>
+							</div>
+
+							<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+								<div id="miniQrCardWrapper" style="display: none; flex-direction: column; align-items: center; gap: 14px;">
+									
+									<div id="miniQrCardExpandBtn" style="display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.2s; cursor: pointer;">
+										<div id="miniQrCard" style="width: 100px; height: 100px; border: 1px solid #e8eaed; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: white; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" title="Clique para ampliar o QR Code">
+											<div id="miniQrBox" style="transform: scale(0.5); transform-origin: center;"></div>
+										</div>
+										<span style="font-size: 0.75rem; color: #1a73e8; font-weight: 600;">Ampliar QR</span>
+									</div>
+									
+									<div style="background: transparent; border: 1px solid #dadce0; border-radius: 12px; padding: 10px 12px; display: flex; gap: 8px; align-items: flex-start; text-align: left; max-width: 180px;">
+										<span class="material-icons" style="color: #9aa0a6; font-size: 1.1rem; margin-top: 1px;">verified_user</span>
+										<span style="color: #5f6368; font-size: 0.7rem; font-weight: 500; line-height: 1.4;">
+											Dica: Confira os dados do destinatário antes de transferir.
+										</span>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="tabEndereco" class="tab-content">
+						<div class="form-group">
+							<label for="partnerCep">CEP</label>
+							<input type="text" id="partnerCep" placeholder="00000-000" maxlength="9">
+						</div>
+
+						<div class="form-row gap-1rem">
+							<div class="form-group" style="flex: 3;">
+								<label for="partnerStreet">Rua</label>
+								<input type="text" id="partnerStreet" placeholder="Rua">
+							</div>
+							<div class="form-group" class="flex-1">
+								<label for="partnerNumber">Número</label>
+								<input type="text" id="partnerNumber" placeholder="Nº">
+							</div>
+						</div>
+
+						<div class="form-row gap-1rem">
+							<div class="form-group" class="flex-1">
+								<label for="partnerNeighborhood">Bairro</label>
+								<input type="text" id="partnerNeighborhood" placeholder="Bairro">
+							</div>
+							<div class="form-group" class="flex-1">
+								<label for="partnerCity">Cidade</label>
+								<input type="text" id="partnerCity" placeholder="Cidade">
+							</div>
+						</div>
+
+						<div class="form-group" style="max-width: 200px;">
+							<label for="partnerState">Estado</label>
+							<select id="partnerState">
+								<option value="">Selecione</option>
+								<option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
+								<option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option>
+								<option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option>
+								<option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option>
+								<option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
+								<option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option>
+								<option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option>
+								<option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option>
+								<option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
+							</select>
+						</div>
+					</div>
+
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" id="cancelPartner">Cancelar</button>
+				<button class="btn btn-primary" id="savePartner">Salvar</button>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal-overlay" id="pixQrModal" style="z-index: 4000;">
+		<div class="modal-card" style="max-width: 340px; padding: 0; position: relative;">
+			
+			<button class="close-btn" id="pixQrModalCloseBtn" style="position: absolute; right: 8px; top: 8px; z-index: 10;">&times;</button>
+			
+			<div style="padding: 2.5rem 1.5rem 1.5rem 1.5rem; text-align: center;">
+				<h3 style="color: #202124; font-size: 1.2rem; margin-bottom: 4px;">QR Code PIX</h3>
+				<p style="color: #5f6368; font-size: 0.9rem; margin-bottom: 1.5rem; word-break: break-all;" id="pixQrKeyLabel">Chave: ...</p>
+				
+				<div style="display: flex; justify-content: center; background: white; padding: 16px; border-radius: 16px; border: 2px dashed #dadce0; margin-bottom: 1.5rem;">
+					<div id="qrcodeBoxBig"></div>
+					<div id="qrcodeBox" class="d-none"></div>
+				</div>
+
+				<div style="background: #fce8e8; border: 1px solid #f5c6c6; border-radius: 12px; padding: 12px; display: flex; gap: 12px; align-items: center; text-align: left;">
+					<span class="material-icons" style="color: #d93025; font-size: 1.8rem;">gpp_maybe</span>
+					<span style="color: #b71c1c; font-size: 0.85rem; font-weight: 500; line-height: 1.3;">
+						Confira atentamente os dados do destinatário antes de confirmar a transação no seu banco.
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<!-- Modal de Tipo de Pagamento (layout refinado) -->
+	<div class="modal-overlay" id="importOfxModal" style="z-index: 2800;">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Importar Extrato (OFX / CSV)</h2>
+                <button class="close-btn" id="closeImportOfxBtn">&times;</button>
+            </div>
+            
+            <div class="step-indicator" id="ofxStepIndicator">
+                <div class="step active" data-step="1"></div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2"></div>
+            </div>
+            
+            <div class="modal-body" style="min-height: 300px; max-height: 65vh; overflow-y: auto;">
+                <div class="step-content active" id="ofxStep1">
+                    <p style="color: #5f6368; margin-bottom: 16px; font-size: 0.95rem;">Selecione a conta e anexe o arquivo do extrato bancário para importar os lançamentos automaticamente.</p>
+                    
+                    <div class="form-group">
+                        <label for="ofxAccountSelect">Conta de Destino *</label>
+                        <select id="ofxAccountSelect">
+                            <option value="" disabled selected>Selecione a conta...</option>
+                        </select>
+                    </div>
+
+                    <div class="ofx-upload-zone" id="ofxDropZone">
+                        <span class="material-icons" style="font-size: 3rem; color: #1a73e8; margin-bottom: 12px;">cloud_upload</span>
+                        <h3 style="font-size: 1.1rem; color: #202124; margin-bottom: 4px;">Clique ou arraste o arquivo aqui</h3>
+                        <p style="font-size: 0.85rem; color: #9aa0a6;">Tamanho máximo: 5MB</p>
+                        <input type="file" id="ofxFileInput" accept=".ofx,.csv" class="d-none">
+                    </div>
+                    <div id="ofxFileNameDisplay" style="text-align: center; margin-top: 12px; font-weight: 600; color: #188038; display: none;"></div>
+                </div>
+
+                <div class="step-content" id="ofxStep2">
+                    <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                            <div class="type-filter" id="ofxTypeFilter" style="width: fit-content; margin: 0;">
+                                <button data-type="all" class="active">Todos</button>
+                                <button data-type="income">Receitas</button>
+                                <button data-type="expense">Despesas</button>
+                            </div>
+                            <div class="type-filter" id="ofxStatusFilter" style="width: fit-content; margin: 0;">
+                                <button data-status="all" class="active">Todos</button>
+                                <button data-status="new">Novos</button>
+                                <button data-status="imported">Já Importados</button>
+                            </div>
+                        </div>
+                        <div class="flex-row-gap8">
+                            <span style="font-size: 0.85rem; color: #5f6368; font-weight: 500;" class="ofx-date-label">Período:</span>
+                            <input type="date" id="ofxFilterDateStart" class="filter-select" style="padding: 6px 10px; font-size: 0.85rem; border-radius: 8px; width: auto;">
+                            <span style="font-size: 0.85rem; color: #5f6368;" class="ofx-date-label">até</span>
+                            <input type="date" id="ofxFilterDateEnd" class="filter-select" style="padding: 6px 10px; font-size: 0.85rem; border-radius: 8px; width: auto;">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 16px;">
+                        <p style="color: #5f6368; font-size: 0.9rem; margin: 0; margin-top: 4px;">Revise e categorize os lançamentos encontrados:</p>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                            <div class="flex-row-gap8">
+                                <input type="checkbox" id="ofxSelectAll" checked style="width: 16px; height: 16px; accent-color: #1a73e8; cursor: pointer;">
+                                <label for="ofxSelectAll" style="font-size: 0.85rem; font-weight: 600; cursor: pointer; color: #5f6368;">Selecionar Todos</label>
+                            </div>
+                            <span id="ofxTopSelectionCount" style="font-size: 0.75rem; color: #1a73e8; font-weight: 600; margin-top: 4px; display: none;"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="ofxReviewList" style="border: 1px solid #e8eaed; border-radius: 12px; overflow: hidden; background: #f8f9fa;">
+                        </div>
+                    
+                    <div style="margin-top: 16px; text-align: right; color: #1a73e8; font-weight: bold; font-size: 1.1rem;" id="ofxSummaryTotal">
+                        Lançamentos prontos para importar: 0
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="ofxPrevBtn" disabled>Voltar</button>
+                <button class="btn btn-primary" id="ofxNextBtn" disabled>Revisar Lançamentos</button>
+                <button class="btn btn-primary" id="ofxImportBtn" style="display: none; background: #34A853;">Importar Selecionados</button>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal-overlay" id="selectPixKeyModal" style="z-index: 3100;">
+        <div class="modal-card" style="max-width: 400px; padding: 0;">
+            <div style="padding: 2.5rem 1.5rem; text-align: center;">
+                <div class="icon-circle-lg" style="background: #e8f0fe;">
+                    <span class="material-icons" style="font-size: 2.2rem; color: #1a73e8;">qr_code_2</span>
+                </div>
+                <h2 class="modal-title-sm">Selecione a Chave Pix</h2>
+                <p style="color: #5f6368; font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.5;">Esta conta possui múltiplas chaves. Qual você deseja usar nesta cobrança?</p>
+                
+                <div id="pixKeyOptionsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem;">
+                    </div>
+                
+                <button class="btn" id="btnCancelPixKeySelect" style="background: transparent; border: 1px solid transparent; color: #64748b; width: 100%; padding: 14px 20px; font-weight: 600; font-size: 0.9rem; border-radius: 12px; cursor: pointer; transition: background 0.2s;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal-overlay" id="paymentTypeModal">
+		<div class="modal-card" style="max-width: 400px;">
+			<div class="modal-header">
+				<h2>Forma de Pagamento</h2>
+				<button class="close-btn" id="closePaymentTypeModal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form id="paymentTypeForm">
+					<div class="form-group">
+						<label for="paymentDescricao">Descrição</label>
+						<input type="text" id="paymentDescricao" placeholder="Ex: Pix, Dinheiro, Cartão..." required>
+					</div>
+
+					<div class="form-row" style="align-items: flex-end; gap: 1rem;">
+						<div class="flex-1">
+							<label class="block-mb6">Permite parcelamento</label>
+							<div class="toggle-group" style="margin-bottom: 0;">
+								<div class="toggle-switch">
+									<input type="checkbox" id="paymentParcelamento">
+									<label for="paymentParcelamento" class="toggle-label"></label>
+								</div>
+								</div>
+						</div>
+						<div class="form-group" id="maxParcelasGroup" style="flex: 0 0 120px; display: none;">
+							<label for="paymentMaxParcelas">Máx. parcelas</label>
+							<input type="number" id="paymentMaxParcelas" min="1" max="48" value="12">
+						</div>
+					</div>
+
+					<div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+						<div style="width: auto;">
+							<label class="block-mb6" id="paymentStatusLabel">Ativo</label>
+							<div class="toggle-group" style="margin-bottom: 0;">
+								<div class="toggle-switch">
+									<input type="checkbox" id="paymentStatus" checked>
+									<label for="paymentStatus" class="toggle-label"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" id="cancelPaymentType">Cancelar</button>
+				<button class="btn btn-primary" id="savePaymentType">Salvar</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal de Categoria -->
+	<div class="modal-overlay" id="categoryModal">
+		<div class="modal-card" style="max-width: 480px;">
+			<div class="modal-header">
+				<h2>Configurar Categoria</h2>
+				<button class="close-btn" id="closeCategoryModal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form id="categoryForm">
+					<div class="form-row gap-1rem">
+						<div class="form-group" style="flex: 2;">
+							<label for="categoryName">Nome da Categoria *</label>
+							<input type="text" id="categoryName" placeholder="Ex: Alimentação..." required>
+						</div>
+						<div class="form-group" class="flex-1">
+							<label for="categoryType">Tipo *</label>
+							<select id="categoryType" required>
+								<option value="expense">Despesa</option>
+								<option value="income">Receita</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-row gap-1rem">
+						<div class="form-group" style="flex: 0 0 60px;">
+							<label for="categoryColor">Cor</label>
+							<input type="color" id="categoryColor" class="color-picker-circle" value="#1a73e8">
+						</div>
+						<div class="form-group" class="flex-1">
+							<label for="categoryCostCenter">Centro de Custo</label>
+							<select id="categoryCostCenter">
+								<option value="">Nenhum</option>
+								</select>
+						</div>
+					</div>
+
+					<div class="form-row" class="flex-end-gap16">
+						<div class="form-group" style="flex: 1; margin-bottom: 0;">
+							<label for="categoryMonthlyGoal">Meta de Gasto Mês</label>
+							<input type="text" id="categoryMonthlyGoal" placeholder="R$ 0,00" class="d-none">
+						</div>
+						<div style="flex: 1; display: flex; justify-content: flex-end;">
+							<div>
+								<label class="block-mb6" id="categoryActiveLabel">Ativo</label>
+								<div class="toggle-group" style="margin-bottom: 0;">
+									<div class="toggle-switch">
+										<input type="checkbox" id="categoryActive" checked>
+										<label for="categoryActive" class="toggle-label"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" id="cancelCategory">Cancelar</button>
+				<button class="btn btn-primary" id="saveCategory">Salvar</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal de Centro de Custo -->
+	<div class="modal-overlay" id="costCenterModal">
+		<div class="modal-card" style="max-width: 400px;">
+			<div class="modal-header">
+				<h2>Centro de Custo</h2>
+				<button class="close-btn" id="closeCostCenterModal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form id="costCenterForm">
+					<div class="form-group">
+						<label for="costCenterDescription">Descrição *</label>
+						<input type="text" id="costCenterDescription" placeholder="Ex: Vendas, Marketing, Projeto X..." required>
+					</div>
+
+					<div class="form-row gap-1rem">
+						<div class="form-group" style="flex: 0 0 60px;">
+							<label for="costCenterColor">Cor</label>
+							<input type="color" id="costCenterColor" class="color-picker-circle" value="#1a73e8">
+						</div>
+						<div class="form-group" class="flex-1">
+							<label for="costCenterObservation">Observação</label>
+							<textarea id="costCenterObservation" rows="3" placeholder="Detalhes adicionais..."></textarea>
+						</div>
+					</div>
+
+					<div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+						<div style="width: auto;">
+							<label class="block-mb6" id="costCenterActiveLabel">Ativo</label>
+							<div class="toggle-group" style="margin-bottom: 0;">
+								<div class="toggle-switch">
+									<input type="checkbox" id="costCenterActive" checked>
+									<label for="costCenterActive" class="toggle-label"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" id="cancelCostCenter">Cancelar</button>
+				<button class="btn btn-primary" id="saveCostCenter">Salvar</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal de confirmação de reset de conta -->
+	<div class="modal-overlay" id="payInvoiceModal" style="z-index: 4000;">
+		<div class="modal-card" style="max-width: 400px; padding: 0;">
+			<div style="padding: 2.5rem 1.5rem; text-align: center;">
+				<div class="icon-circle-lg" style="background: #e8f0fe;">
+					<span class="material-icons" style="font-size: 2.2rem; color: #1a73e8;">payments</span>
+				</div>
+				<h2 class="modal-title-sm">Pagar Fatura</h2>
+				<p style="color: #5f6368; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">O valor total pendente desta fatura será debitado automaticamente do saldo da sua conta bancária.</p>
+				
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 16px; margin-bottom: 24px; border: 1px solid #e8eaed;">
+                    <p style="font-size: 0.85rem; color: #5f6368; margin-bottom: 4px; text-transform: uppercase; font-weight: 600;">Total a Pagar</p>
+                    <h3 id="payInvoiceTotalDisplay" style="font-size: 1.8rem; color: #1a73e8; margin: 0;">R$ 0,00</h3>
+                </div>
+
+				<div class="flex-row-gap12">
+					<button class="btn btn-secondary" id="btnCancelInvoicePayment" style="flex: 1; padding: 12px;">Cancelar</button>
+					<button class="btn btn-primary" id="btnConfirmInvoicePayment" style="flex: 1; padding: 12px;">Pagar Fatura</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="resetAccountModal" style="z-index: 6000;">
+		<div class="modal-card" style="max-width: 480px;"> 
+            
+			<div class="modal-header" style="border-bottom: none; justify-content: center; position: relative; padding-top: 2rem; padding-bottom: 0;">
+				<button class="close-btn" id="closeResetModal" style="position: absolute; right: 16px; top: 16px;">&times;</button>
+				
+				<div style="text-align: center; width: 100%;">
+                    <div style="width: 56px; height: 56px; background: #fff1f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem auto; border: 4px solid #ffe4e6; flex-shrink: 0;">
+					    <span class="material-icons" style="font-size: 1.8rem; color: #e11d48;">delete_outline</span>
+                    </div>
+					<h2 style="font-size: 1.4rem; color: #0f172a; margin: 0; font-weight: 700; letter-spacing: -0.02em;">Excluir dados da conta</h2>
+				</div>
+			</div>
+			
+			<div class="modal-body" style="padding-top: 1rem; padding-bottom: 0;">
+				<p style="font-size: 0.95rem; color: #475569; line-height: 1.5; margin-bottom: 1rem; text-align: center;">
+					Esta ação removerá permanentemente os seguintes itens:
+				</p>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; margin-bottom: 1.25rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0; color: #334155; font-size: 0.9rem; display: flex; flex-direction: column; gap: 10px; font-weight: 500;">
+                        <li class="flex-row-gap10"><span class="material-icons" style="color: #f43f5e; font-size: 1.2rem;">remove_circle</span> Lançamentos financeiros</li>
+                        <li class="flex-row-gap10"><span class="material-icons" style="color: #f43f5e; font-size: 1.2rem;">remove_circle</span> Contas financeiras personalizadas e cartões</li>
+                        <li class="flex-row-gap10"><span class="material-icons" style="color: #f43f5e; font-size: 1.2rem;">remove_circle</span> Categorias</li>
+                        <li class="flex-row-gap10"><span class="material-icons" style="color: #f43f5e; font-size: 1.2rem;">remove_circle</span> Centros de custo</li>
+                        <li class="flex-row-gap10"><span class="material-icons" style="color: #f43f5e; font-size: 1.2rem;">remove_circle</span> Formas de pagamento personalizadas</li>
+                        <li class="flex-row-gap10"><span class="material-icons" style="color: #f43f5e; font-size: 1.2rem;">remove_circle</span> Configurações relacionadas</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <span class="material-icons" style="color: #e11d48; font-size: 1.4rem;">warning_amber</span>
+                    <span style="color: #be123c; font-size: 0.85rem; font-weight: 600; line-height: 1.4;">Atenção: Essa ação não pode ser desfeita. Todos os dados listados serão irrevogavelmente perdidos.</span>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 0 0 1.5rem 0;">
+
+				<div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+					<label for="resetPassword">Senha atual</label>
+                    <div class="input-icon-wrap" style="position: relative;">
+					    <input type="password" id="resetPassword" placeholder="••••••••" style="padding-right: 46px; width: 100%; font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
+                        <button type="button" id="toggleResetPasswordBtn" tabindex="-1" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center;">
+                            <span class="material-icons-outlined" style="font-size:20px;">visibility_off</span>
+                        </button>
+                    </div>
+				</div>
+
+                <div class="form-group" style="margin-bottom: 0; text-align: left;">
+					<label for="resetConfirmWord">Para confirmar, digite <strong style="color: #e11d48;">EXCLUIR</strong></label>
+					<input type="text" id="resetConfirmWord" placeholder="EXCLUIR" autocomplete="off" style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+				</div>
+
+                <div id="resetErrorMsg" style="color: #e11d48; font-size: 0.85rem; font-weight: 600; margin-top: 12px; min-height: 20px; text-align: center;"></div>
+			</div>
+			
+			<div class="modal-footer" style="border-top: none; justify-content: flex-end; gap: 12px; padding: 16px 24px 24px; background: transparent;">
+                <button class="btn btn-secondary" id="cancelReset" style="width: auto;">Cancelar</button>
+                <button class="btn btn-danger" id="confirmReset" style="width: auto;" disabled>Excluir permanentemente</button>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal-overlay" id="customPeriodModal" style="z-index: 2600;">
+        <div class="modal-card" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Período Personalizado</h2>
+                <button class="close-btn" id="closeCustomPeriodBtn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <p style="color: #5f6368; margin-bottom: 16px; font-size: 0.9rem;">Selecione o intervalo de datas que deseja visualizar:</p>
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div class="form-group" class="flex-1">
+                        <label for="customDateStart">De:</label>
+                        <input type="date" id="customDateStart">
+                    </div>
+                    <div class="form-group" class="flex-1">
+                        <label for="customDateEnd">Até:</label>
+                        <input type="date" id="customDateEnd">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelCustomPeriodBtn">Cancelar</button>
+                <button class="btn btn-primary" id="applyCustomPeriodBtn">Filtrar</button>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal-overlay" id="receiptGeneratorModal" style="z-index: 2500;">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Gerar Recibo</h2>
+                <button class="close-btn" id="closeReceiptGenModal">&times;</button>
+            </div>
+            
+            <div class="step-indicator" id="receiptStepIndicator">
+                <div class="step active" data-step="1"></div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2"></div>
+            </div>
+            
+            <div class="modal-body" style="min-height: 280px;">
+                <div class="step-content active" id="rStep1">
+                    <div class="form-group">
+                        <label for="receiptPartnerSelect">Para qual parceiro?</label>
+                        <select id="receiptPartnerSelect">
+                            <option value="" disabled selected>Selecione um parceiro...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="receiptMonthGroup" style="display: none; animation: fadeInTab 0.3s ease;">
+                        <label for="receiptMonthSelect">Mês de Referência</label>
+                        <input type="month" id="receiptMonthSelect">
+                    </div>
+                </div>
+                
+                <div class="step-content" id="rStep2">
+                    <p style="color: #5f6368; margin-bottom: 12px; font-size: 0.9rem;">Selecione apenas os lançamentos realizados (pagos/recebidos):</p>
+                    
+                    <div id="selectAllReceiptWrapper" style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px; padding: 4px 8px;">
+                        <input type="checkbox" id="selectAllReceiptTx" style="width: 18px; height: 18px; accent-color: #1a73e8; cursor: pointer;">
+                        <label for="selectAllReceiptTx" style="color: #5f6368; font-weight: 600; cursor: pointer; user-select: none;">Selecionar Todos</label>
+                    </div>
+
+                    <div id="receiptTxList" style="max-height: 220px; overflow-y: auto; border: 1px solid #e8eaed; border-radius: 12px; padding: 8px;">
+                        </div>
+                    <div style="margin-top: 16px; text-align: right; font-weight: 600; font-size: 1.2rem; color: #1a73e8;" id="receiptTotalPreview">
+                        Total: R$ 0,00
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="rPrevBtn" disabled>Voltar</button>
+                <button class="btn btn-primary" id="rNextBtn" disabled>Continuar</button>
+                <button class="btn btn-primary" id="rDownloadBtn" style="display: none; align-items: center; gap: 6px;">
+                    <span class="material-icons">file_download</span> Baixar Recibo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="billingGeneratorModal" style="z-index: 2550;">
+        <div class="modal-card" style="max-width: 550px;">
+            <div class="modal-header">
+                <h2>Gerar Cobrança (Lote)</h2>
+                <button class="close-btn" id="closeBillingGenModal">&times;</button>
+            </div>
+            
+            <div class="step-indicator" id="billingStepIndicator">
+                <div class="step active" data-step="1"></div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2"></div>
+            </div>
+            
+            <div class="modal-body" style="min-height: 280px;">
+                <div class="step-content active" id="bStep1">
+                    <div class="form-group">
+                        <label for="billingPartnerSelect">Para qual parceiro?</label>
+                        <select id="billingPartnerSelect">
+                            <option value="" disabled selected>Selecione um parceiro...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="step-content" id="bStep2">
+                    <p style="color: #5f6368; margin-bottom: 12px; font-size: 0.9rem;">Selecione as receitas <strong>pendentes</strong> que deseja incluir na cobrança:</p>
+                    
+                    <div id="selectAllBillingWrapper" style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px; padding: 4px 8px;">
+                        <input type="checkbox" id="selectAllBillingTx" style="width: 18px; height: 18px; accent-color: #1a73e8; cursor: pointer;">
+                        <label for="selectAllBillingTx" style="color: #5f6368; font-weight: 600; cursor: pointer; user-select: none;">Selecionar Todas</label>
+                    </div>
+
+                    <div id="billingTxList" style="max-height: 240px; overflow-y: auto; border: 1px solid #e8eaed; border-radius: 12px; padding: 8px;">
+                        </div>
+                    
+                    <div style="margin-top: 16px; text-align: right; font-weight: 600; font-size: 1.2rem; color: #1a73e8;" id="billingTotalPreview">
+                        Total da Fatura: R$ 0,00
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="bPrevBtn" disabled>Voltar</button>
+                <button class="btn btn-primary" id="bNextBtn" disabled>Continuar</button>
+                <button class="btn btn-primary" id="bGenerateBtn" style="display: none; align-items: center; gap: 6px;">
+                    <span class="material-icons">request_quote</span> Gerar Fatura PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="confirmPaymentModal" style="z-index: 3000;">
+        <div class="modal-card" style="max-width: 400px; padding: 0;">
+            <div style="padding: 2.5rem 1.5rem; text-align: center;">
+                <div class="icon-circle-lg" style="background: #e6f4ea;">
+                    <span class="material-icons" style="font-size: 2.2rem; color: #188038;">event_available</span>
+                </div>
+                <h2 style="font-size: 1.4rem; color: var(--text-color, #202124); margin-bottom: 0.5rem;">Confirmar Pagamento</h2>
+                <p style="color: #5f6368; font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.5;">Qual data de pagamento deseja registrar para este lançamento?</p>
+                
+                <div class="flex-col-gap12">
+                    <button class="btn btn-primary" id="btnPayToday" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px;">
+                        <span>Data de Hoje</span>
+                        <strong id="payTodayDate" style="font-weight: 600;"></strong>
+                    </button>
+                    <button class="btn btn-secondary" id="btnPayOriginal" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border: 1px solid #dadce0;">
+                        <span>Data Original</span>
+                        <strong id="payOriginalDate" style="font-weight: 600;"></strong>
+                    </button>
+                </div>
+                
+               <button class="btn" id="btnCancelPayment" style="margin-top: 1rem; background: transparent; border: 1px solid transparent; color: #64748b; width: 100%; padding: 14px 20px; font-weight: 600; font-size: 0.9rem; border-radius: 12px; cursor: pointer; transition: background 0.2s;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal-overlay" id="scannerModal" style="z-index: 5000;">
+        <div class="modal-card" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Ler Boleto</h2>
+                <button class="close-btn" id="closeScannerModalBtn">&times;</button>
+            </div>
+            
+            <div class="modal-body" style="padding-top: 0;">
+                <div class="bb-tabs-container" style="margin-bottom: 16px;">
+                    <button class="bb-tab active" id="tabScanner">Câmera</button>
+                    <button class="bb-tab" id="tabImagem">Galeria</button>
+                </div>
+
+                <div id="contentScanner" style="text-align: center;">
+                    <p style="font-size: 0.85rem; color: #5f6368; margin-bottom: 12px;">Centralize o código na linha vermelha.</p>
+                    <div style="position: relative; width: 100%; height: 180px; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 8px;">
+                        <video id="cameraVideo" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                        <div style="position: absolute; top: 50%; left: 5%; width: 90%; height: 2px; background: rgba(217, 48, 37, 0.8); transform: translateY(-50%); box-shadow: 0 0 8px rgba(217, 48, 37, 1);"></div>
+                    </div>
+                </div>
+
+                <div id="contentImagem" style="display: none; text-align: center; padding: 2rem 0;">
+                    
+                    <div style="width: 70px; height: 70px; background: #e8f0fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; position: relative;">
+                        
+                        <div style="font-family: monospace; font-size: 2rem; color: #1a73e8; font-weight: bold; letter-spacing: -2px; display: flex; align-items: center; justify-content: center;">
+                            | <span style="font-size: 1.6rem; letter-spacing: -3px; color: #a1c4fd;">|</span> ||
+                        </div>
+                        
+                        <div style="position: absolute; width: 32px; height: 32px; background: #1a73e8; border-radius: 50%; display: flex; align-items: center; justify-content: center; top: -10px; right: -10px; border: 3px solid #f8f9fa;">
+                            <span class="material-icons" style="font-size: 1.2rem; color: white;">search</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px; padding: 0 10px;">
+                        <p style="font-size: 0.95rem; color: #5f6368; line-height: 1.4;">
+                            <span style="color: #4285f4; font-weight: bold;">Dica:</span> Envie uma foto ou print do boleto focado apenas na área das <span style="font-weight: bold;">barras pretas</span> para uma leitura rápida.
+                        </p>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" id="btnUploadBoletoImage" style="width: 100%; padding: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="material-icons" style="font-size: 1.2rem;">add_photo_alternate</span>
+                        Carregar foto
+                    </button>
+                    <input type="file" id="boletoPhotoInput" accept="image/*" class="d-none">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="genericConfirmModal" style="z-index: 7000;">
+        <div class="modal-card" style="max-width: 440px; padding: 0; position: relative;">
+            <button class="close-btn" id="btnCloseConfirmModal" style="position: absolute; right: 12px; top: 12px; width: 32px; height: 32px; z-index: 10;">&times;</button>
+            <div style="padding: 24px;">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding-right: 24px;">
+                    <div id="confirmIconContainer" style="width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; line-height: 0;">
+                        <span class="material-icons" id="confirmIcon" style="font-size: 1.7rem; display: block;">warning_amber</span>
+                    </div>
+                    <h2 id="confirmTitle" style="font-size: 1.25rem; font-weight: 600; margin: 0; color: #202124; line-height: 1; display: flex; align-items: center;">Confirmar Ação</h2>
+                </div>
+                
+                <div id="confirmMessage" style="color: #5f6368; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5;">Tem certeza que deseja continuar?</div>
+                
+                <div class="flex-col-gap16">
+                    <div id="confirmDontShowContainer" style="display: none; align-items: center; justify-content: flex-start; gap: 8px; padding-left: 4px;">
+                        <input type="checkbox" id="confirmDontShowCheckbox" style="width: 16px; height: 16px; accent-color: #1a73e8; cursor: pointer; margin: 0;">
+                        <label for="confirmDontShowCheckbox" style="font-size: 0.9rem; color: #5f6368; cursor: pointer; user-select: none;">Não exibir novamente</label>
+                    </div>
+
+                    <div class="flex-end-gap12">
+                        <button class="btn" id="btnCancelConfirm" style="background: transparent; color: #5f6368; font-weight: 600; padding: 10px 16px; border: 1px solid transparent;">Cancelar</button>
+                        <button class="btn btn-primary" id="btnAcceptConfirm" style="padding: 10px 20px; font-weight: 600;">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal-overlay" id="accountDetailsModal" style="z-index: 2000;">
+		<div class="modal-card" style="max-width: 480px; background: #f1f3f4;">
+			
+			<div class="modal-header" style="background: #f1f3f4; border-bottom: none; padding-bottom: 16px;">
+				<div class="flex-row-gap12">
+					<div id="detBankLogo" style="width: 40px; height: 40px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #dadce0; background: white; flex-shrink: 0;"></div>
+					<h2 id="detAccountName" style="font-size: 1.2rem; font-weight: 600; color: #202124;">Nome da Conta</h2>
+				</div>
+				<button class="close-btn" id="closeAccountDetailsBtn">&times;</button>
+			</div>
+
+			<div class="modal-body" style="padding: 16px 24px; background: #f1f3f4; max-height: 80vh; overflow-y: auto;">
+				
+				<div class="bb-tabs-container" id="bbTabsContainer">
+					<button class="bb-tab active" id="bbTabConta">Conta</button>
+					<button class="bb-tab" id="bbTabCartao" class="d-none">Cartões</button>
+				</div>
+
+				<div id="accDetailsContent">
+
+				<div class="bb-balance-card">
+					<p style="color: #5f6368; font-size: 0.95rem; margin-bottom: 8px;">Saldo</p>
+					<h1 id="detAccountBalance" style="color: #1a73e8; font-size: 2.5rem; font-weight: 700; margin: 0; letter-spacing: -1px;">R$ 0,00</h1>
+				</div>
+
+				<div class="bb-details-list">
+					<div class="bb-list-header">
+						<span style="font-weight: 600; color: #1a73e8; font-size: 1.05rem;">Detalhamento do saldo</span>
+						<span class="material-icons" style="color: #1a73e8;">expand_less</span>
+					</div>
+					
+					<div class="bb-list-item">
+						<div>
+							<p style="font-weight: 600; color: #202124; font-size: 1.05rem; margin-bottom: 2px;">Saldo do dia</p>
+							<p style="font-size: 0.85rem; color: #5f6368;" id="detAccountType">C. corrente</p>
+						</div>
+						<div style="font-weight: 600; color: #1a73e8; font-size: 1.1rem;" id="detBalanceDay">R$ 0,00</div>
+					</div>
+					
+					<div class="bb-list-item">
+						<div>
+							<p style="font-weight: 600; color: #202124; font-size: 1.05rem;">Saldo disponível</p>
+						</div>
+						<div style="font-weight: 600; color: #1a73e8; font-size: 1.1rem;" id="detBalanceAvailable">R$ 0,00</div>
+					</div>
+					
+					<div class="bb-list-item" id="btnOpenConfig" style="cursor: pointer;">
+						<div>
+							<p style="font-weight: 600; color: #1a73e8; font-size: 1.05rem;">Configurações</p>
+						</div>
+						<span class="material-icons" style="color: #1a73e8;">chevron_right</span>
+					</div>
+				</div>
+                </div> <div id="accWalletContent" class="d-none">
+					</div>
+                
+                <div style="height: 24px;"></div> 
+            </div>
+		</div>
+	</div>
+	
+	<div class="modal-overlay" id="accountModal">
+		<div class="modal-card" style="max-width: 550px;">
+			
+			<div class="modal-header" style="padding-bottom: 0; border-bottom: none;">
+				<h2 id="accountModalTitle">Nova Conta</h2>
+				<button class="close-btn" id="closeAccountModal">&times;</button>
+			</div>
+			
+			<div class="modal-tabs" id="accountTabs">
+				<button class="tab-btn active" data-target="tabContaGeral">Detalhes da Conta</button>
+				<button class="tab-btn" data-target="tabContaCartoes" id="tabCartoesBtn" class="d-none">Cartões de Crédito</button>
+			</div>
+
+			<div class="modal-body" style="padding-top: 0; max-height: 65vh;">
+				<form id="accountForm" onsubmit="event.preventDefault();">
+					<div id="tabContaGeral" class="tab-content active">
+                        
+                        <div class="form-group" style="background: #f8f9fa; padding: 16px; border-radius: 16px; border: 1px solid #e8eaed; position: relative;" id="bankSelectorBox">
+                            <label for="accountBankSearch" style="margin-bottom: 12px;">Instituição Financeira *</label>
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <div id="accBankLogo" style="width: 48px; height: 48px; border-radius: 12px; background: white; border: 1px solid #dadce0; display: flex; align-items: center; justify-content: center; overflow: hidden; font-weight: bold; color: #5f6368; font-size: 1.2rem; flex-shrink: 0;">
+                                    <span class="material-icons">account_balance</span>
+                                </div>
+                                <div style="flex: 1; position: relative;">
+                                    <input type="text" id="accountBankSearch" placeholder="Digite para buscar o banco..." autocomplete="off" class="d-none">
+                                    <input type="hidden" id="accountBankValue">
+                                    <div id="accountBankList" class="custom-dropdown-list"></div>
+                                </div>
+                            </div>
+						</div>
+
+						<div class="form-row" style="gap: 1rem; margin-top: 1rem;">
+							<div class="form-group" style="flex: 2;">
+								<label for="accountName">Apelido da Conta *</label>
+								<input type="text" id="accountName" placeholder="Ex: Minha Conta Inter" required>
+							</div>
+							<div class="form-group" class="flex-1">
+								<label for="accountType">Tipo *</label>
+								<select id="accountType" required>
+									<option value="Conta Corrente">Corrente</option>
+									<option value="Poupança">Poupança</option>
+									<option value="Investimentos">Investimentos</option>
+                                    <option value="Carteira">Carteira (Dinheiro)</option>
+									<option value="Outros">Outros</option>
+								</select>
+							</div>
+						</div>
+
+                        <div class="form-row gap-1rem">
+                            <div class="form-group" class="flex-1">
+                                <label for="accountBalance" id="accountBalanceLabel">Saldo Inicial (R$) *</label>
+                                <input type="text" id="accountBalance" class="valor-input" placeholder="R$ 0,00" required>
+                                <small id="accountBalanceHelper" style="color: #1a73e8; font-size: 0.8rem; margin-top: 4px; display: block;">Defina o saldo para começar.</small>
+                            </div>
+                        </div>
+
+						<div class="form-group">
+							<label for="accountObservation">Observações</label>
+							<textarea id="accountObservation" rows="2" placeholder="Agência, conta ou detalhes livres..."></textarea>
+						</div>
+						
+						<div class="form-group" style="margin-top: 1.5rem; margin-bottom: 0;">
+							<label class="payment-types-title" style="font-weight: 600; margin-bottom: 4px; display: block;">Formas de Pagamento e Recebimento Aceitas</label>
+							<p class="payment-types-subtitle" style="font-size: 0.8rem; margin-bottom: 8px;">Selecione quais meios de movimentação podem ser usados nesta conta.</p>
+							<div id="accountPaymentTypesContainer" class="payment-chip-group">
+								</div>
+						</div>
+
+                        <div id="accountPixConfig" style="display: none; background: #f8f9fa; padding: 16px; border-radius: 12px; margin-top: 16px; border: 1px solid #e8eaed;">
+                            
+                            <div id="pixKeysListView">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                                    <div>
+                                        <label style="font-weight: 600; display: block; color: #202124;" class="payment-types-title">Chaves Pix da Conta</label>
+                                        <p style="font-size: 0.8rem; color: #5f6368; margin-top: 4px;" class="payment-types-subtitle">Cadastre até 5 chaves para recebimento.</p>
+                                    </div>
+                                    <button type="button" class="btn-new" id="btnShowPixKeyForm" style="height: 36px; padding: 0 16px;">
+                                        <span class="material-icons" style="font-size: 1.2rem;">add</span>
+                                        <span class="btn-text" style="max-width: 100px; opacity: 1; margin-left: 6px;">Adicionar</span>
+                                    </button>
+                                </div>
+                                
+                                <div id="innerPixKeysList" class="flex-col-gap8">
+                                    </div>
+                            </div>
+
+                            <div id="pixKeyFormView" style="display: none; background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid #e8eaed; position: relative;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #dadce0; padding-bottom: 12px;">
+                                    <h4 style="color: #202124; font-weight: 600;" id="pixKeyFormTitle">Nova Chave Pix</h4>
+                                    <button type="button" class="icon-btn-footer" id="btnHidePixKeyForm" style="width: 32px; height: 32px; border: none; background: transparent;"><span class="material-icons">close</span></button>
+                                </div>
+
+                                <div class="form-row" style="gap: 1rem; margin-bottom: 1rem;">
+                                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                        <label for="newPixKeyType">Tipo de Chave</label>
+                                        <select id="newPixKeyType">
+                                            <option value="CPF/CNPJ">CPF / CNPJ</option>
+                                            <option value="Celular">Celular</option>
+                                            <option value="E-mail">E-mail</option>
+                                            <option value="Aleatória">Chave Aleatória</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="newPixKeyValue">Chave Pix</label>
+                                    <input type="text" id="newPixKeyValue" placeholder="000.000.000-00">
+                                </div>
+
+                                <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                                    <button type="button" class="btn btn-primary" id="btnSavePixKeyToList" class="d-none">Salvar Chave na Lista</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr style="border: 0; border-top: 1px solid #e8eaed; margin: 24px 0;">
+
+                        <div class="flex-col-gap16">
+                            
+                            <div class="flex-between">
+                                <div style="flex: 1; padding-right: 16px;">
+                                    <label class="toggle-label-text" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.9rem; font-weight: 500;">
+                                        <span class="material-icons" style="font-size: 1.3rem; color: #1a73e8;">dashboard</span>
+                                        Exibir no Dashboard
+                                    </label>
+                                    <small style="color: #9aa0a6; font-size: 0.8rem; line-height: 1.2; display: block; margin-left: 29px;">Mostra a conta na tela inicial.</small>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="accountShowDash" checked>
+                                    <label for="accountShowDash" class="toggle-label"></label>
+                                </div>
+                            </div>
+
+                            <div class="flex-between">
+                                <div style="flex: 1; padding-right: 16px;">
+                                    <label class="toggle-label-text" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.9rem; font-weight: 500;">
+                                        <span class="material-icons" style="font-size: 1.3rem; color: #188038;">pie_chart</span>
+                                        Somar no Saldo Geral (KPI)
+                                    </label>
+                                    <small style="color: #9aa0a6; font-size: 0.8rem; line-height: 1.2; display: block; margin-left: 29px;">Soma este valor no "Saldo Total" superior.</small>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="accountIncludeKPI" checked>
+                                    <label for="accountIncludeKPI" class="toggle-label"></label>
+                                </div>
+                            </div>
+
+                            <div class="flex-between">
+                                <div style="flex: 1; padding-right: 16px;">
+                                    <label class="toggle-label-text" style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.9rem; font-weight: 500;">
+                                        <span class="material-icons" style="font-size: 1.3rem; color: #e67e22;">credit_card</span>
+                                        Conta possui Cartão de Crédito
+                                    </label>
+                                    <small style="color: #9aa0a6; font-size: 0.8rem; line-height: 1.2; display: block; margin-left: 29px;">Habilita a gestão de faturas para este banco.</small>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="accountHasCreditCard">
+                                    <label for="accountHasCreditCard" class="toggle-label"></label>
+                                </div>
+                            </div>
+                            
+                            <div id="accountLimitConfig" style="display: none; background: #f8f9fa; padding: 16px; border-radius: 12px; margin-top: 12px; border: 1px solid #e8eaed;">
+                                <div class="form-group" style="margin-bottom: 12px;">
+                                    <label for="accountLimitType">Gestão de Limite</label>
+                                    <select id="accountLimitType">
+                                        <option value="individual">Limite Individual por Cartão</option>
+                                        <option value="shared">Limite Compartilhado (Global)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="accountGlobalLimitGroup" style="display: none; margin-bottom: 0;">
+                                    <label for="accountGlobalLimit">Limite Global da Conta (R$)</label>
+                                    <input type="text" id="accountGlobalLimit" class="valor-input" placeholder="R$ 0,00">
+                                </div>
+                            </div>
+
+                            <div class="active-toggle-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 16px; border-top: 1px dashed #e8eaed;">
+                                <div style="flex: 1; padding-right: 16px;">
+                                    <label class="toggle-label-text" style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px; font-size: 0.9rem; font-weight: 500;">
+                                        <span class="material-icons" style="font-size: 1.3rem; color: #5f6368;">power_settings_new</span>
+                                        <span id="accountActiveLabel">Conta Ativa</span>
+                                    </label>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="accountActive" checked>
+                                    <label for="accountActive" class="toggle-label"></label>
+                                </div>
+                            </div>
+
+                        </div>
+					</div>
+
+					<div id="tabContaCartoes" class="tab-content">
+                        
+                        <div id="cardsListView">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <div>
+                                    <h4 style="color: #202124; font-weight: 600;">Meus Cartões</h4>
+                                    <p style="color: #5f6368; font-size: 0.85rem;">Cartões vinculados a esta conta</p>
+                                </div>
+                                <button type="button" class="btn-new" id="btnShowCardForm" style="height: 36px; padding: 0 16px;">
+                                    <span class="material-icons" style="font-size: 1.2rem;">add</span>
+                                    <span class="btn-text" style="max-width: 100px; opacity: 1; margin-left: 6px;">Adicionar</span>
+                                </button>
+                            </div>
+                            
+                            <div id="innerCardsList" class="flex-col-gap12">
+                                <div style="text-align: center; padding: 2rem; color: #9aa0a6; background: #f8f9fa; border-radius: 16px; border: 1px dashed #dadce0;">
+                                    Nenhum cartão cadastrado.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cardFormView" style="display: none; background: #f8f9fa; padding: 16px; border-radius: 16px; border: 1px solid #e8eaed; position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #dadce0; padding-bottom: 12px;">
+                                <h4 style="color: #202124; font-weight: 600;" id="cardFormTitle">Novo Cartão</h4>
+                                <button type="button" class="icon-btn-footer" id="btnHideCardForm" style="width: 32px; height: 32px; border: none; background: transparent;"><span class="material-icons">close</span></button>
+                            </div>
+
+                            <div class="form-row gap-1rem">
+                                <div class="form-group" style="flex: 2;">
+                                    <label for="ccName">Nome / Apelido</label>
+                                    <input type="text" id="ccName" placeholder="Ex: Inter Black">
+                                </div>
+                                <div class="form-group" class="flex-1">
+                                    <label for="ccLast4">Últimos 4 dígitos</label>
+                                    <input type="text" id="ccLast4" placeholder="Ex: 0092" maxlength="4">
+                                </div>
+                            </div>
+
+                            <div class="form-row gap-1rem">
+                                <div class="form-group" class="flex-1">
+                                    <label for="ccBrand">Bandeira</label>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <div id="ccBrandLogoBox" style="width: 44px; height: 44px; border-radius: 12px; background: white; border: 1px solid #dadce0; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                            <span class="material-icons" style="color: #9aa0a6;">credit_card</span>
+                                        </div>
+                                        <select id="ccBrand" class="flex-1">
+                                            <option value="Mastercard">Mastercard</option>
+                                            <option value="Visa">Visa</option>
+                                            <option value="Elo">Elo</option>
+                                            <option value="American Express">American Express</option>
+                                            <option value="Hipercard">Hipercard</option>
+                                            <option value="Outra">Outra</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" class="flex-1">
+                                    <label for="ccTypeFormat">Formato</label>
+                                    <select id="ccTypeFormat">
+                                        <option value="Físico">Físico</option>
+                                        <option value="Virtual">Virtual</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row gap-1rem">
+                                <div class="form-group" class="flex-1">
+                                    <label for="ccLimit">Limite Total (R$)</label>
+                                    <input type="text" id="ccLimit" class="valor-input" placeholder="R$ 0,00">
+                                </div>
+                                <div class="form-group" style="flex: 0 0 60px; display: flex; flex-direction: column; align-items: center;">
+                                    <label for="ccColor">Cor</label>
+                                    <input type="color" id="ccColor" class="color-picker-circle" value="#ff7a00">
+                                </div>
+                            </div>
+
+                            <div class="form-row gap-1rem" id="ccDatesGroup">
+                                <div class="form-group" class="flex-1">
+                                    <label for="ccClosingDay">Dia de Fechamento</label>
+                                    <input type="number" id="ccClosingDay" min="1" max="31" placeholder="Ex: 05">
+                                </div>
+                                <div class="form-group" class="flex-1">
+                                    <label for="ccDueDay">Dia de Vencimento</label>
+                                    <input type="number" id="ccDueDay" min="1" max="31" placeholder="Ex: 15">
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px dashed #dadce0;">
+                                <div>
+                                    <label style="font-weight: 500; color: #202124; display: block; margin-bottom: 2px;">Cartão Pré-pago?</label>
+                                    <small style="color: #5f6368;">Consome o saldo da conta direto.</small>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="ccIsPrepaid">
+                                    <label for="ccIsPrepaid" class="toggle-label"></label>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px dashed #dadce0;">
+                                <div>
+                                    <label style="font-weight: 500; color: #202124; display: block; margin-bottom: 2px;">Principal do Dashboard?</label>
+                                    <small style="color: #5f6368;">Este cartão abrirá primeiro na tela inicial do sistema.</small>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="ccIsDefault">
+                                    <label for="ccIsDefault" class="toggle-label"></label>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 8px; margin-top: 24px; justify-content: flex-end;">
+                                <button type="button" class="btn btn-primary" id="btnSaveCardToList" class="d-none">Salvar Cartão na Lista</button>
+                            </div>
+                        </div>
+					</div>
+
+				</form>
+			</div>
+			<div class="modal-footer" class="flex-between">
+				<button type="button" class="btn btn-danger" id="deleteAccountBtn" class="d-none">Excluir Conta</button>
+				<div style="display: flex; gap: 8px; margin-left: auto;">
+					<button type="button" class="btn btn-secondary" id="cancelAccount">Cancelar</button>
+					<button type="button" class="btn btn-primary" id="saveAccount">Salvar Conta</button>
+				</div>
+			</div>
+		</div>
+	</div>

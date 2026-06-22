@@ -1,0 +1,9 @@
+# Dependencies
+.opencode/node_modules/
+
+# Backup files
+*.backup
+
+# OS files
+Thumbs.db
+.DS_Store

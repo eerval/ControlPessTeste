@@ -1,0 +1,21 @@
+{
+  "name": "controlpess",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx esbuild js/app.js --bundle --outfile=js/app.bundle.js --format=iife --global-name=ControlPess"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eerval/ControlPessTeste.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/eerval/ControlPessTeste/issues"
+  },
+  "homepage": "https://github.com/eerval/ControlPessTeste#readme"
+}

@@ -4,6 +4,9 @@ import { currentUser, g, userRef,
   currentPartner, customStartDate, customEndDate, previousPeriod,
   editingTransactionId, setEditingTransactionId, currentRStep, receiptEligibleTxs,
   currentBStep, billingEligibleTxs,
+  setCurrentRStep, setReceiptEligibleTxs, setCurrentBStep, setBillingEligibleTxs,
+  setCurrentPeriod, setCurrentStatus, setCurrentType, setCurrentPartner,
+  setPreviousPeriod, setCustomStartDate, setCustomEndDate,
   deleteTransaction, saveTransaction
 } from './state.js';
 import {
@@ -915,7 +918,7 @@ function checkRStep1Valid() {
 }
 
 function goToRStep(step) {
-  currentRStep = step;
+  setCurrentRStep(step);
   document.querySelectorAll('#receiptStepIndicator .step').forEach((s, idx) => { s.classList.toggle('active', idx + 1 <= step); });
   document.querySelectorAll('#receiptGeneratorModal .step-content').forEach(c => c.classList.remove('active'));
   document.getElementById('rStep' + step).classList.add('active');
@@ -927,7 +930,7 @@ function goToRStep(step) {
 function loadReceiptTransactions() {
   const partnerId = partnerSelect.value;
   const monthStr = monthSelect.value;
-  receiptEligibleTxs = g.transactions.filter(t => t.partnerId === partnerId && t.date.startsWith(monthStr) && t.type !== 'transfer' && t.isPaid === true).sort((a, b) => new Date(a.date) - new Date(b.date));
+  setReceiptEligibleTxs(g.transactions.filter(t => t.partnerId === partnerId && t.date.startsWith(monthStr) && t.type !== 'transfer' && t.isPaid === true).sort((a, b) => new Date(a.date) - new Date(b.date)));
   if (receiptEligibleTxs.length === 0) { rTxList.innerHTML = '<div class="receipt-empty-msg" style="padding: 16px; text-align: center;">Nenhum registro encontrado para este parceiro no período selecionado.</div>'; if (selectAllReceiptTx) selectAllReceiptTx.disabled = true; return; }
   if (selectAllReceiptTx) selectAllReceiptTx.disabled = false;
   let html = '';
@@ -964,7 +967,7 @@ function checkBStep1Valid() {
 }
 
 function goToBStep(step) {
-  currentBStep = step;
+  setCurrentBStep(step);
   document.querySelectorAll('#billingStepIndicator .step').forEach((s, idx) => { s.classList.toggle('active', idx + 1 <= step); });
   document.querySelectorAll('#billingGeneratorModal .step-content').forEach(c => c.classList.remove('active'));
   document.getElementById('bStep' + step).classList.add('active');
@@ -976,7 +979,7 @@ function goToBStep(step) {
 function loadBillingTransactions() {
   const partnerId = bPartnerSelect.value;
   const partnerNameStr = bPartnerSelect.options[bPartnerSelect.selectedIndex].text;
-  billingEligibleTxs = g.transactions.filter(t => {
+  setBillingEligibleTxs(g.transactions.filter(t => {
     if (t.partnerId !== partnerId && t.partnerName !== partnerNameStr) return false;
     if (t.type !== 'income') return false;
     if (t.isPaid === true) return false;
@@ -986,7 +989,7 @@ function loadBillingTransactions() {
     if (t.paymentMethod && typeof t.paymentMethod === 'string' && t.paymentMethod.toLowerCase().includes('pix')) { isPix = true; }
     if (!isPix) return false;
     return true;
-  }).sort((a, b) => new Date(a.date) - new Date(b.date));
+  }).sort((a, b) => new Date(a.date) - new Date(b.date)));
   if (billingEligibleTxs.length === 0) { bTxList.innerHTML = '<div class="receipt-empty-msg" style="padding: 16px; text-align: center;">Nenhuma receita pendente via Pix encontrada para este parceiro.</div>'; if (selectAllBillingTx) selectAllBillingTx.disabled = true; return; }
   if (selectAllBillingTx) selectAllBillingTx.disabled = false;
   let html = '';
@@ -1015,24 +1018,24 @@ function updateBTotal() {
 }
 
 function initTransactions() {
-  document.getElementById('periodFilter')?.addEventListener('change', (e) => { currentPeriod = e.target.value; renderTransactions(); });
-  document.getElementById('statusFilter')?.addEventListener('change', (e) => { currentStatus = e.target.value; renderTransactions(); });
+  document.getElementById('periodFilter')?.addEventListener('change', (e) => { setCurrentPeriod(e.target.value); renderTransactions(); });
+  document.getElementById('statusFilter')?.addEventListener('change', (e) => { setCurrentStatus(e.target.value); renderTransactions(); });
   document.querySelectorAll('#typeFilter button').forEach(btn => {
     btn?.addEventListener('click', (e) => {
       document.querySelectorAll('#typeFilter button').forEach(b => b?.classList.remove('active'));
       btn.classList.add('active');
-      currentType = btn.dataset.type;
+      setCurrentType(btn.dataset.type);
       renderTransactions();
     });
   });
-  document.getElementById('partnerFilter')?.addEventListener('change', (e) => { currentPartner = e.target.value; renderTransactions(); });
+  document.getElementById('partnerFilter')?.addEventListener('change', (e) => { setCurrentPartner(e.target.value); renderTransactions(); });
   document.getElementById('accountFilter')?.addEventListener('change', (e) => { window.currentAccountFilter = e.target.value; renderTransactions(); });
   periodFilterElement?.addEventListener('change', (e) => {
     if (e.target.value === 'custom') {
       if (customStartDate) document.getElementById('customDateStart').value = customStartDate;
       if (customEndDate) document.getElementById('customDateEnd').value = customEndDate;
       customPeriodModal.style.display = 'flex';
-    } else if (e.target.value !== 'custom_view') { currentPeriod = e.target.value; previousPeriod = currentPeriod; renderTransactions(); }
+    } else if (e.target.value !== 'custom_view') { setCurrentPeriod(e.target.value); setPreviousPeriod(currentPeriod); renderTransactions(); }
   });
   document.getElementById('closeCustomPeriodBtn')?.addEventListener('click', closeCustomDateModal);
   document.getElementById('cancelCustomPeriodBtn')?.addEventListener('click', closeCustomDateModal);
@@ -1041,13 +1044,13 @@ function initTransactions() {
     const end = document.getElementById('customDateEnd').value;
     if (!start || !end) { showToast('Preencha a data de início e fim.', 'warning'); return; }
     if (start > end) { showToast('A data inicial não pode ser maior que a final.', 'error'); return; }
-    customStartDate = start; customEndDate = end; currentPeriod = 'custom';
+    setCustomStartDate(start); setCustomEndDate(end); setCurrentPeriod('custom');
     const formatBr = (dateString) => dateString.split('-').reverse().join('/');
     const dateLabel = formatBr(start) + ' - ' + formatBr(end);
     const customViewOpt = document.getElementById('customViewOption');
     customViewOpt.textContent = dateLabel;
     periodFilterElement.value = 'custom_view';
-    previousPeriod = 'custom_view';
+    setPreviousPeriod('custom_view');
     customPeriodModal.style.display = 'none';
     renderTransactions();
   });
@@ -1061,8 +1064,8 @@ function initTransactions() {
     });
   }
   document.getElementById('clearFiltersBtn')?.addEventListener('click', () => {
-    currentPeriod = 'month'; previousPeriod = 'month'; currentStatus = 'all'; currentType = 'all'; currentPartner = 'all';
-    window.currentAccountFilter = 'all'; customStartDate = ''; customEndDate = '';
+    setCurrentPeriod('month'); setPreviousPeriod('month'); setCurrentStatus('all'); setCurrentType('all'); setCurrentPartner('all');
+    window.currentAccountFilter = 'all'; setCustomStartDate(''); setCustomEndDate('');
     periodFilterElement.value = 'month';
     document.getElementById('statusFilter').value = 'all';
     document.getElementById('partnerFilter').value = 'all';
@@ -1403,8 +1406,8 @@ function initTransactions() {
             } else { transactionsToAdd.push({ ...baseTransaction, date: dtVencimento, createdAt: new Date().toISOString() }); }
             for (let t of transactionsToAdd) { await saveTransaction(t); await processAccountBalance(t, 'apply'); }
             if (cobrancaCheckbox && cobrancaCheckbox.checked) { window.gerarFaturaCobrancaPDF(transactionsToAdd); if (g.transactions.length > 0) { setEditingTransactionId(g.transactions[g.transactions.length - 1].id); } }
-            currentPeriod = 'month'; previousPeriod = 'month'; currentStatus = 'all'; currentType = 'all'; currentPartner = 'all';
-            window.currentAccountFilter = 'all'; customStartDate = ''; customEndDate = '';
+            setCurrentPeriod('month'); setPreviousPeriod('month'); setCurrentStatus('all'); setCurrentType('all'); setCurrentPartner('all');
+            window.currentAccountFilter = 'all'; setCustomStartDate(''); setCustomEndDate('');
             if (document.getElementById('periodFilter')) document.getElementById('periodFilter').value = 'month';
             if (document.getElementById('statusFilter')) document.getElementById('statusFilter').value = 'all';
             if (document.getElementById('partnerFilter')) document.getElementById('partnerFilter').value = 'all';

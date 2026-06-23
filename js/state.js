@@ -19,6 +19,21 @@ let currentView = { value: 'dashboard' };
 let privacyActive = localStorage.getItem('controlpess-privacy') === 'true';
 function setCurrentUser(v) { currentUser = v; }
 function setPrivacyActive(v) { privacyActive = v; }
+function setOfxCurrentStep(v) { ofxCurrentStep = v; }
+function setOfxCurrentFilter(v) { ofxCurrentFilter = v; }
+function setOfxCurrentStatusFilter(v) { ofxCurrentStatusFilter = v; }
+function setOfxItemSendoConciliado(v) { ofxItemSendoConciliado = v; }
+function setCurrentRStep(v) { currentRStep = v; }
+function setReceiptEligibleTxs(v) { receiptEligibleTxs = v; }
+function setCurrentBStep(v) { currentBStep = v; }
+function setBillingEligibleTxs(v) { billingEligibleTxs = v; }
+function setCurrentPeriod(v) { currentPeriod = v; }
+function setCurrentStatus(v) { currentStatus = v; }
+function setCurrentType(v) { currentType = v; }
+function setCurrentPartner(v) { currentPartner = v; }
+function setPreviousPeriod(v) { previousPeriod = v; }
+function setCustomStartDate(v) { customStartDate = v; }
+function setCustomEndDate(v) { customEndDate = v; }
 let currentPartner = 'all';
 let customStartDate = '';
 let customEndDate = '';
@@ -124,7 +139,11 @@ export {
     currentPeriod, currentType, currentStatus, currentView, privacyActive,
     currentPartner, customStartDate, customEndDate, previousPeriod,
     currentRStep, receiptEligibleTxs, currentBStep, billingEligibleTxs,
+    setCurrentRStep, setReceiptEligibleTxs, setCurrentBStep, setBillingEligibleTxs,
+    setCurrentPeriod, setCurrentStatus, setCurrentType, setCurrentPartner,
+    setPreviousPeriod, setCustomStartDate, setCustomEndDate,
     ofxParsedTransactions, ofxCurrentStep, ofxCurrentFilter, ofxCurrentStatusFilter,
+    setOfxCurrentStep, setOfxCurrentFilter, setOfxCurrentStatusFilter, setOfxItemSendoConciliado,
     ofxItemSendoConciliado, currentWalletAccId, invoiceMonthOffset, currentWalletCardIndex,
     invoicePaymentData, accountFormHasChanges, allBanks, currentAccountCards, currentAccountPixKeys,
     codeReaderBoleto, isBoletoCameraRunning,

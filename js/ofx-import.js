@@ -1,6 +1,7 @@
 import { auth, db } from './firebase-config.js';
 import { currentUser, g, userRef,
   ofxParsedTransactions, ofxCurrentStep, ofxCurrentFilter, ofxCurrentStatusFilter,
+  setOfxCurrentStep, setOfxCurrentFilter, setOfxCurrentStatusFilter, setOfxItemSendoConciliado,
   ofxItemSendoConciliado, editingTransactionId } from './state.js';
 import { escapeHtml, escapeJsAttr, formatCurrency, formatDate, formatDateISO, sanitizeFirestoreData, getTodayISO } from './utils.js';
 import { showToast, askConfirmation } from './ui-helpers.js';
@@ -303,7 +304,7 @@ function parseOfxContent(content) {
 }
 
 function goToOfxStep(step) {
-    ofxCurrentStep = step;
+    setOfxCurrentStep(step);
 
     document.querySelectorAll('#ofxStepIndicator .step').forEach((s, idx) => s.classList.toggle('active', idx + 1 <= step));
     document.querySelectorAll('#importOfxModal .step-content').forEach(c => c.classList.remove('active'));
@@ -511,8 +512,8 @@ export function initOfxImport() {
             ofxFileInput.value = '';
             ofxFileNameDisplay.style.display = 'none';
 
-            ofxCurrentFilter = 'all';
-            ofxCurrentStatusFilter = 'all';
+            setOfxCurrentFilter('all');
+            setOfxCurrentStatusFilter('all');
             document.querySelectorAll('#ofxTypeFilter button').forEach(b => {
                 b.classList.remove('active');
                 if(b.dataset.type === 'all') b.classList.add('active');
@@ -565,7 +566,7 @@ export function initOfxImport() {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('#ofxTypeFilter button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            ofxCurrentFilter = btn.dataset.type;
+            setOfxCurrentFilter(btn.dataset.type);
 
             ofxParsedTransactions.forEach(t => t.selected = false);
             const selectAllCheckbox = document.getElementById('ofxSelectAll');
@@ -579,7 +580,7 @@ export function initOfxImport() {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('#ofxStatusFilter button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            ofxCurrentStatusFilter = btn.dataset.status;
+            setOfxCurrentStatusFilter(btn.dataset.status);
 
             ofxParsedTransactions.forEach(t => t.selected = false);
             const selectAllCheckbox = document.getElementById('ofxSelectAll');
@@ -610,7 +611,7 @@ export function initOfxImport() {
 
     window.abrirModalConciliacaoOfx = function(ofxId) {
         const tx = ofxParsedTransactions.find(t => t.id === ofxId);
-        ofxItemSendoConciliado = tx;
+        setOfxItemSendoConciliado(tx);
         if (!tx) return;
 
         const modal = document.getElementById('ofxReconcileModal');
